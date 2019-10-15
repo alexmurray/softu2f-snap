@@ -4,7 +4,7 @@
 
 -------------------------------------------------------------------------------
 
-**SoftU2F in a snap** - Provides a software-based Universal 2nd Factor (U2F) token for use by Firefox / Chrome
+**[SoftU2F](https://github.com/danstiner/rust-u2f/) in a snap** - Provides a software-based Universal 2nd Factor (U2F) token for use by Firefox / Chrome
 
 [![SoftU2F](https://snapcraft.io/softu2f/badge.svg)](https://snapcraft.io/softu2f)
 
