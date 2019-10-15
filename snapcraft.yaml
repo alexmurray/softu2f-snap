@@ -1,0 +1,59 @@
+name: softu2f
+base: core18
+version: '0.4.0'
+summary: A software-only Universal 2nd Factor (U2F) token.
+description: |
+  Provides a software-based Universal Second (2nd) Factor (U2F) token which
+  can be used with Google Chrome / Firefox to provide multi-factor
+  authentication.
+
+grade: devel
+confinement: strict
+icon: resources/softu2f.svg
+license: MIT
+
+apps:
+  softu2f-system-daemon:
+    command: bin/softu2f-system-daemon
+    daemon: simple
+    sockets:
+      softu2f:
+        listen-stream: $SNAP_COMMON/softu2f.sock
+    plugs:
+      - network-bind
+      - uhid
+  softu2f-user-daemon:
+    command: bin/softu2f-user-daemon
+    plugs:
+      - desktop
+      - password-manager-service
+    desktop: usr/share/applications/softu2f.desktop
+
+parts:
+  rust-u2f:
+    plugin: rust
+    source: https://github.com/danstiner/rust-u2f
+    source-type: git
+    source-subdir: linux
+    build-packages:
+      - pkg-config
+      - libdbus-1-dev
+      - libssl-dev
+      - libsystemd-dev
+      - llvm
+      - clang
+      - libclang-dev
+    override-build: |
+      /root/.cargo/bin/rustup default stable
+      cd linux
+      sed -i 's|/run/softu2f/softu2f.sock|/var/snap/softu2f/common/softu2f.sock|' system-daemon/src/lib.rs
+      /root/.cargo/bin/cargo +stable build
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      cp target/debug/softu2f-system-daemon $SNAPCRAFT_PART_INSTALL/bin
+      cp target/debug/softu2f-user-daemon $SNAPCRAFT_PART_INSTALL/bin
+  resources:
+    plugin: dump
+    source: resources
+    organize:
+      softu2f.svg: usr/share/icons/hicolor/scalable/apps/
+      softu2f.desktop: usr/share/applications/

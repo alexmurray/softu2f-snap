@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=SoftU2F
+GenericName=SoftU2F
+Comment=Software-based U2F Application
+Exec=bin/softu2f-user-daemon
+Icon=${SNAP}/meta/gui/icon.svg
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=System;
+X-GNOME-UsesNotifications=true
